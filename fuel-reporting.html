@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fuel Reporting - UR Fleet Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="driver-dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="logo" />
+        <h2>Driver Portal</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a href="driver-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="confirm-availability.html"><i class="fas fa-calendar-check"></i> Confirm Availability</a></li>
+        <li><a href="confirmed-requests.html"><i class="fas fa-clipboard-check"></i> Confirmed Request</a></li>
+        <li class="active"><a href="fuel-reporting.html"><i class="fas fa-gas-pump"></i> Fuel Reporting</a></li>
+        <li><a href="vehicle-issues.html"><i class="fas fa-exclamation-triangle"></i> Vehicle Issue Reporting</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#profile"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="user-info">
+          <span class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">2</span>
+          </span>
+          <div class="user-profile">
+            <img src="./image/avatar.png" alt="Driver Profile" />
+            <span>Driver Name</span>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="user-info-header">
+                <img src="./image/avatar.png" alt="Driver Profile" />
+                <div class="user-details">
+                  <h4>Driver Name</h4>
+                  <p>ID: DRV-001</p>
+                </div>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <a href="#profile" class="user-dropdown-item"><i class="fas fa-id-card"></i> Driver Information</a>
+              <a href="#license" class="user-dropdown-item"><i class="fas fa-drivers-license"></i> License Details</a>
+              <a href="#settings" class="user-dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="login.html" class="user-dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-section">
+        <h2>Journey Tracking</h2>
+        
+        <div class="journey-cards">
+          <div class="journey-card start-journey">
+            <div class="card-header">
+              <i class="fas fa-play-circle"></i>
+              <h3>Start Journey</h3>
+            </div>
+            <form class="journey-form" id="startJourneyForm">
+              <div class="form-group">
+                <label for="vehicle">Vehicle</label>
+                <select id="vehicle" name="vehicle" required>
+                  <option value="">Select Vehicle</option>
+                  <option value="UR-001">UR-001 (Toyota Hiace)</option>
+                  <option value="UR-002">UR-002 (Toyota Coaster)</option>
+                  <option value="UR-003">UR-003 (Toyota Hiace)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+              </div>
+
+              <div class="form-group">
+                <label for="initialOdometer">Initial Odometer Reading (km)</label>
+                <input type="number" id="initialOdometer" name="initialOdometer" required>
+              </div>
+
+              <div class="form-group">
+                <label for="initialFuel">Initial Fuel Level (Liters)</label>
+                <input type="number" id="initialFuel" name="initialFuel" step="0.01" required>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Start Journey</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="journey-card end-journey">
+            <div class="card-header">
+              <i class="fas fa-stop-circle"></i>
+              <h3>End Journey</h3>
+            </div>
+            <form class="journey-form" id="endJourneyForm">
+              <div class="form-group">
+                <label for="vehicle-end">Vehicle</label>
+                <select id="vehicle-end" name="vehicle" required>
+                  <option value="">Select Vehicle</option>
+                  <option value="UR-001">UR-001 (Toyota Hiace)</option>
+                  <option value="UR-002">UR-002 (Toyota Coaster)</option>
+                  <option value="UR-003">UR-003 (Toyota Hiace)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="date-end">Date</label>
+                <input type="date" id="date-end" name="date" required>
+              </div>
+
+              <div class="form-group">
+                <label for="finalOdometer">Final Odometer Reading (km)</label>
+                <input type="number" id="finalOdometer" name="finalOdometer" required>
+              </div>
+
+              <div class="form-group">
+                <label for="finalFuel">Final Fuel Level (Liters)</label>
+                <input type="number" id="finalFuel" name="finalFuel" step="0.01" required>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">End Journey</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="journey-history">
+          <h3>Recent Journeys</h3>
+          <div class="journey-grid">
+            <div class="journey-record">
+              <div class="record-header">
+                <h4>Journey #JR-001</h4>
+                <span class="status completed">Completed</span>
+              </div>
+              <div class="record-details">
+                <div class="detail-item">
+                  <i class="fas fa-car"></i>
+                  <span>UR-001 (Toyota Hiace)</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-calendar"></i>
+                  <span>2024-03-10</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-road"></i>
+                  <span>Distance: 200 km</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-tachometer-alt"></i>
+                  <span>45,678 km → 45,878 km</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-gas-pump"></i>
+                  <span>45.0 L → 25.5 L</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="journey-record">
+              <div class="record-header">
+                <h4>Journey #JR-002</h4>
+                <span class="status completed">Completed</span>
+              </div>
+              <div class="record-details">
+                <div class="detail-item">
+                  <i class="fas fa-car"></i>
+                  <span>UR-002 (Toyota Coaster)</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-calendar"></i>
+                  <span>2024-03-05</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-road"></i>
+                  <span>Distance: 200 km</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-tachometer-alt"></i>
+                  <span>32,456 km → 32,656 km</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-gas-pump"></i>
+                  <span>50.0 L → 30.0 L</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize date picker with today's date
+      const dateInput = document.getElementById('date');
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.value = today;
+
+      // Handle form validation and submission
+      const fuelForm = document.getElementById('fuelForm');
+      
+      // Add event listeners for odometer validation
+      const initialOdometer = document.getElementById('initialOdometer');
+      const finalOdometer = document.getElementById('finalOdometer');
+      const initialFuel = document.getElementById('initialFuel');
+      const finalFuel = document.getElementById('finalFuel');
+
+      finalOdometer.addEventListener('input', function() {
+        const initial = parseFloat(initialOdometer.value) || 0;
+        const final = parseFloat(this.value) || 0;
+        
+        if (final < initial) {
+          this.setCustomValidity('Final odometer reading must be greater than initial reading');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+
+      initialOdometer.addEventListener('input', function() {
+        if (finalOdometer.value) {
+          const initial = parseFloat(this.value) || 0;
+          const final = parseFloat(finalOdometer.value) || 0;
+          
+          if (final < initial) {
+            finalOdometer.setCustomValidity('Final odometer reading must be greater than initial reading');
+          } else {
+            finalOdometer.setCustomValidity('');
+          }
+        }
+      });
+
+      // Add event listeners for fuel validation
+      finalFuel.addEventListener('input', function() {
+        const initial = parseFloat(initialFuel.value) || 0;
+        const final = parseFloat(this.value) || 0;
+        
+        if (final > initial) {
+          this.setCustomValidity('Final fuel level should not be greater than initial fuel level unless fuel was added');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+
+      // Handle form submission
+      fuelForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(fuelForm);
+        const data = Object.fromEntries(formData.entries());
+        
+        // Calculate distance and fuel consumption
+        const initialOdo = parseFloat(data.initialOdometer) || 0;
+        const finalOdo = parseFloat(data.finalOdometer) || 0;
+        const distance = finalOdo - initialOdo;
+        
+        const initialFuelLevel = parseFloat(data.initialFuel) || 0;
+        const finalFuelLevel = parseFloat(data.finalFuel) || 0;
+        const fuelAdded = parseFloat(data.fuelAmount) || 0;
+        const fuelUsed = initialFuelLevel - finalFuelLevel + fuelAdded;
+        
+        // Add calculated values to data
+        data.distance = distance;
+        data.fuelUsed = fuelUsed;
+        data.fuelEfficiency = distance > 0 ? (fuelUsed / distance * 100).toFixed(2) : 0; // L/100km
+        
+        // Here you would typically send the data to your backend
+        console.log('Form data:', data);
+        
+        // Show success message with fuel efficiency
+        alert(`Fuel report submitted successfully!\nDistance: ${distance} km\nFuel Used: ${fuelUsed.toFixed(2)} L\nFuel Efficiency: ${data.fuelEfficiency} L/100km`);
+        
+        // Optionally redirect to dashboard or refresh the page
+        // window.location.href = 'driver-dashboard.html';
+      });
+    });
+  </script>
+</body>
+</html> 

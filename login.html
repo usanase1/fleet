@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Fleet Management System | University of Rwanda</title>
+    <link rel="stylesheet" href="styles.css" onerror="handleStyleError(this)">
+    <link rel="stylesheet" href="login.css" onerror="handleStyleError(this)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loading.active {
+            display: flex;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="login-logo">
+            <h1>Fleet Management System</h1>
+            <p>University of Rwanda</p>
+        </div>
+        
+        <div class="login-form-container">
+            <h2><i class="fas fa-user-lock"></i> Login</h2>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+        
+        <div class="login-footer">
+            <p>&copy; 2024 University of Rwanda - Fleet Management System. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleStyleError(link) {
+            console.error('Failed to load stylesheet:', link.href);
+            // Create an alternative style element
+            const style = document.createElement('style');
+            style.textContent = `
+                .login-container { max-width: 400px; margin: 50px auto; padding: 20px; }
+                .login-form { display: flex; flex-direction: column; gap: 15px; }
+                .form-group { margin-bottom: 15px; }
+                .login-button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function showLoading() {
+            document.querySelector('.loading').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.querySelector('.loading').classList.remove('active');
+        }
+
+        // Preload dashboard pages
+        function preloadDashboards() {
+            const dashboards = [
+                { file: 'admin-dashboard.html', css: 'admin-dashboard.css' },
+                { file: 'driver-dashboard.html', css: 'driver-dashboard.css' },
+                { file: 'staff-dashboard.html', css: 'staff-dashboard.css' },
+                { file: 'system-admin-dashboard.html', css: 'styles.css' }
+            ];
+            
+            return Promise.all(dashboards.map(async dashboard => {
+                try {
+                    // Load HTML file
+                    const htmlResponse = await fetch(dashboard.file);
+                    if (!htmlResponse.ok) {
+                        console.warn(`Failed to load ${dashboard.file}`);
+                        return null;
+                    }
+                    
+                    // Load CSS file
+                    const cssResponse = await fetch(dashboard.css);
+                    if (!cssResponse.ok) {
+                        console.warn(`Failed to load ${dashboard.css}`);
+                    }
+                    
+                    return {
+                        html: await htmlResponse.text(),
+                        css: await cssResponse.text()
+                    };
+                } catch (error) {
+                    console.error(`Error loading ${dashboard.file}:`, error);
+                    return null;
+                }
+            }));
+        }
+
+        // Cache dashboard content
+        let dashboardCache = {};
+        preloadDashboards().then(contents => {
+            const dashboards = [
+                'admin-dashboard.html',
+                'driver-dashboard.html',
+                'staff-dashboard.html',
+                'hr-dashboard.html',
+                'system-admin-dashboard.html'
+            ];
+            
+            dashboards.forEach((dashboard, index) => {
+                if (contents[index]) {
+                    dashboardCache[dashboard] = contents[index];
+                }
+            });
+        });
+
+        // Toggle password visibility
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordInput = document.querySelector('#password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember').checked;
+            
+            // Define user credentials and their roles
+            const userCredentials = {
+                'superAdmin': { password: 'superAdmin123', role: 'system_admin', name: 'System Administrator', dashboard: 'system-admin-dashboard.html' },
+                'staff': { password: 'staff123', role: 'staff', name: 'Staff Member', dashboard: 'staff-dashboard.html' },
+                'driver': { password: 'driver123', role: 'driver', name: 'Driver', dashboard: 'driver-dashboard.html' },
+                'staffAdmin': { password: 'hr123', role: 'hr', name: 'hr', dashboard: 'hr-dashboard.html' },
+                'admin': { password: 'admin123', role: 'admin', name: 'Administrator', dashboard: 'admin-dashboard.html' }
+            };
+            
+            // Check if user exists and password matches
+            const user = userCredentials[username];
+            if (user && user.password === password) {
+                try {
+                    // Store login state and user information
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', user.name);
+                    localStorage.setItem('userRole', user.role);
+                    
+                    // If remember me is checked, store the username
+                    if (rememberMe) {
+                        localStorage.setItem('rememberedUsername', username);
+                    } else {
+                        localStorage.removeItem('rememberedUsername');
+                    }
+
+                    // Add login timestamp
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+
+                    // Wait for dashboard to be preloaded
+                    if (dashboardCache[user.dashboard]) {
+                        window.location.href = user.dashboard;
+                    } else {
+                        // If dashboard not preloaded, redirect anyway
+                        window.location.href = user.dashboard;
+                    }
+                } catch (error) {
+                    console.error('Error during login:', error);
+                    alert('Error during login. Please try again.');
+                } finally {
+                    hideLoading();
+                }
+            } else {
+                hideLoading();
+                // Show error message with animation
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid username or password. Please try again.';
+                document.querySelector('.login-form').insertBefore(errorMessage, document.querySelector('.form-options'));
+                
+                // Remove error message after 3 seconds
+                setTimeout(() => {
+                    errorMessage.remove();
+                }, 3000);
+            }
+        });
+
+        // Check for remembered username
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberedUsername = localStorage.getItem('rememberedUsername');
+            if (rememberedUsername) {
+                document.getElementById('username').value = rememberedUsername;
+                document.getElementById('remember').checked = true;
+            }
+
+            // Check if user is already logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userRole = localStorage.getItem('userRole');
+            
+            // Define dashboard mappings
+            const dashboardMappings = {
+                'system_admin': 'system-admin-dashboard.html',
+                'staff': 'staff-dashboard.html',
+                'driver': 'driver-dashboard.html',
+                'admin': 'admin-dashboard.html',
+                'hr': 'hr-dashboard.html'
+            };
+
+            // Only redirect if user is logged in and has a valid role
+            if (isLoggedIn === 'true' && userRole && dashboardMappings[userRole]) {
+                // Clear any existing error messages
+                const existingError = document.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                // Redirect to appropriate dashboard
+                window.location.href = dashboardMappings[userRole];
+            } else {
+                // Clear any existing login state if invalid
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('lastLogin');
+            }
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            const currentPath = window.location.pathname;
+            if (currentPath.endsWith('login.html')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('lastLogin');
+            }
+        });
+    </script>
+</body>
+</html> 

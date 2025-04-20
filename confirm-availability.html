@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirm Availability - UR Fleet Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="driver-dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="logo" />
+        <h2>Driver Portal</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a href="driver-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="active"><a href="confirm-availability.html"><i class="fas fa-calendar-check"></i> Confirm Availability</a></li>
+        <li><a href="confirmed-requests.html"><i class="fas fa-clipboard-check"></i> Confirmed Request</a></li>
+        <li><a href="fuel-reporting.html"><i class="fas fa-gas-pump"></i> Fuel Reporting</a></li>
+        <li><a href="vehicle-issues.html"><i class="fas fa-exclamation-triangle"></i> Vehicle Issue Reporting</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#profile"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="user-info">
+          <span class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">2</span>
+          </span>
+          <div class="user-profile">
+            <img src="./image/avatar.png" alt="Driver Profile" />
+            <span>Driver Name</span>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="user-info-header">
+                <img src="./image/avatar.png" alt="Driver Profile" />
+                <div class="user-details">
+                  <h4>Driver Name</h4>
+                  <p>ID: DRV-001</p>
+                </div>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <a href="#profile" class="user-dropdown-item"><i class="fas fa-id-card"></i> Driver Information</a>
+              <a href="#license" class="user-dropdown-item"><i class="fas fa-drivers-license"></i> License Details</a>
+              <a href="#settings" class="user-dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="login.html" class="user-dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-section">
+        <h2>Pending Requests</h2>
+        
+        <div class="requests-list">
+          <!-- Request Card -->
+          <div class="request-card" data-request-id="REQ-001">
+            <div class="request-header">
+              <h3>Request #REQ-001</h3>
+              <div class="status-container">
+                <span class="status assigned">Assigned to You</span>
+                <span class="confirmation-status pending">Pending Your Response</span>
+              </div>
+            </div>
+            
+            <div class="request-details">
+              <div class="detail-item">
+                <i class="fas fa-calendar"></i>
+                <div>
+                  <strong>Date:</strong>
+                  <p>2024-04-15</p>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <strong>Time:</strong>
+                  <p>09:00 AM</p>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                  <strong>Destination:</strong>
+                  <p>Kigali Convention Center</p>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                  <strong>Purpose:</strong>
+                  <p>Meeting</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="response-section">
+              <div class="response-options">
+                <button class="response-btn confirm" onclick="confirmAvailability('REQ-001')">
+                  <i class="fas fa-check"></i> Confirm Availability
+                </button>
+                <button class="response-btn decline" onclick="declineAvailability('REQ-001')">
+                  <i class="fas fa-times"></i> Decline
+                </button>
+              </div>
+              <div class="decline-reason" style="display: none;">
+                <textarea placeholder="Please provide a reason for declining..." id="declineReason-REQ-001"></textarea>
+                <button class="submit-reason" onclick="submitDeclineReason('REQ-001')">Submit Reason</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .status-container {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .confirmation-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .confirmation-status.pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .confirmation-status.confirmed {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .confirmation-status.declined {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .response-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .response-options {
+      display: flex;
+      gap: 10px;
+    }
+
+    .response-btn {
+      padding: 8px 16px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .response-btn.confirm {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .response-btn.decline {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .response-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .decline-reason {
+      margin-top: 15px;
+    }
+
+    .decline-reason textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .submit-reason {
+      padding: 8px 16px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Authentication check
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userRole = localStorage.getItem('userRole');
+
+      if (!isLoggedIn || userRole !== 'driver') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Set user information
+      const username = localStorage.getItem('username');
+      document.querySelector('.user-profile span').textContent = username || 'Driver';
+      document.querySelector('.user-details h4').textContent = username || 'Driver';
+    });
+
+    function confirmAvailability(requestId) {
+      const requestCard = document.querySelector(`[data-request-id="${requestId}"]`);
+      const confirmationStatus = requestCard.querySelector('.confirmation-status');
+      const responseOptions = requestCard.querySelector('.response-options');
+      
+      // Update status
+      confirmationStatus.textContent = 'Confirmed';
+      confirmationStatus.className = 'confirmation-status confirmed';
+      
+      // Disable response buttons
+      responseOptions.querySelectorAll('.response-btn').forEach(btn => {
+        btn.disabled = true;
+      });
+      
+      // Hide decline reason if visible
+      const declineReason = requestCard.querySelector('.decline-reason');
+      if (declineReason) {
+        declineReason.style.display = 'none';
+      }
+      
+      // Notify admin about confirmation
+      alert('Your availability has been confirmed. The admin will be notified.');
+    }
+
+    function declineAvailability(requestId) {
+      const requestCard = document.querySelector(`[data-request-id="${requestId}"]`);
+      const declineReason = requestCard.querySelector('.decline-reason');
+      
+      // Show decline reason input
+      declineReason.style.display = 'block';
+    }
+
+    function submitDeclineReason(requestId) {
+      const requestCard = document.querySelector(`[data-request-id="${requestId}"]`);
+      const declineReason = requestCard.querySelector('.decline-reason textarea');
+      const confirmationStatus = requestCard.querySelector('.confirmation-status');
+      const responseOptions = requestCard.querySelector('.response-options');
+      
+      if (!declineReason.value.trim()) {
+        alert('Please provide a reason for declining.');
+        return;
+      }
+      
+      // Update status
+      confirmationStatus.textContent = 'Declined';
+      confirmationStatus.className = 'confirmation-status declined';
+      
+      // Disable response buttons
+      responseOptions.querySelectorAll('.response-btn').forEach(btn => {
+        btn.disabled = true;
+      });
+      
+      // Hide decline reason
+      declineReason.parentElement.style.display = 'none';
+      
+      // Notify admin about decline
+      alert('Your unavailability has been recorded. The admin will be notified.');
+    }
+  </script>
+</body>
+</html> 

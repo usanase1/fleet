@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Request - UR Fleet Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="asset-manager-dashboard.css">
+    <link rel="stylesheet" href="staff-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="logo">
+                <h2>Staff Portal</h2>
+            </div>
+            <ul class="nav-links">
+                <li data-page="dashboard">
+                    <a href="staff-dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li data-page="vehicle-requests">
+                    <a href="vehicle-requests.html"><i class="fas fa-car"></i> Vehicle Requests</a>
+                </li>
+                <li data-page="trip-history">
+                    <a href="trip-history.html"><i class="fas fa-history"></i> Trip History</a>
+                </li>
+                <li data-page="notifications">
+                    <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#profile"><i class="fas fa-user-circle"></i> Profile</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-info">
+                    <span class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </span>
+                    <div class="user-profile">
+                        <img src="./image/avatar.png" alt="Staff Profile">
+                        <span>Staff Name</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-page active">
+                <div class="section-header">
+                    <h2>Edit Request</h2>
+                    <div class="header-actions">
+                        <a href="view-request.html?id=REQ-001" class="btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Request
+                        </a>
+                    </div>
+                </div>
+
+                <div class="new-request">
+                    <form id="editRequestForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="requestId">Request ID</label>
+                                <input type="text" id="requestId" value="REQ-001" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <input type="text" id="status" value="Pending" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="purpose">Purpose of Trip</label>
+                                <select id="purpose" name="purpose" required>
+                                    <option value="field_trip" selected>Field Trip</option>
+                                    <option value="conference">Conference</option>
+                                    <option value="research">Research</option>
+                                    <option value="meeting">Meeting</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select id="department" name="department" required>
+                                    <option value="computer_science" selected>Computer Science</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="business">Business</option>
+                                    <option value="medicine">Medicine</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="destination">Destination</label>
+                                <input type="text" id="destination" name="destination" value="Huye Campus" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="passengers">Number of Passengers</label>
+                                <input type="number" id="passengers" name="passengers" value="15" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDateTime">Start Date & Time</label>
+                                <input type="datetime-local" id="startDateTime" name="startDateTime" value="2024-02-23T08:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDateTime">End Date & Time</label>
+                                <input type="datetime-local" id="endDateTime" name="endDateTime" value="2024-02-23T17:00" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicleType">Preferred Vehicle Type</label>
+                                <select id="vehicleType" name="vehicleType" required>
+                                    <option value="minibus" selected>Minibus</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="bus">Bus</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialRequirements">Special Requirements</label>
+                                <input type="text" id="specialRequirements" name="specialRequirements" value="None">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="additionalNotes">Additional Notes</label>
+                            <textarea id="additionalNotes" name="additionalNotes" rows="4">This is a field trip for the Computer Science department students to visit Huye Campus for research purposes.</textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="window.location.href='view-request.html?id=REQ-001'">Cancel</button>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Authentication and role verification
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userRole = localStorage.getItem('userRole');
+
+            if (!isLoggedIn || userRole !== 'staff') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Set staff name from localStorage
+            const username = localStorage.getItem('username');
+            const userProfileName = document.querySelector('.user-profile span');
+            if (userProfileName) {
+                userProfileName.textContent = username;
+            }
+
+            // Handle logout
+            const logoutButton = document.querySelector('.sidebar-footer a[href="login.html"]');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('userRole');
+                    window.location.href = 'login.html';
+                });
+            }
+
+            // Get request ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestId = urlParams.get('id');
+
+            // Here you would typically fetch the request details from your backend
+            // For now, we're using static data
+            if (requestId) {
+                // Update the back button href
+                const backButton = document.querySelector('.header-actions .btn-secondary');
+                if (backButton) {
+                    backButton.href = `view-request.html?id=${requestId}`;
+                }
+            }
+
+            // Handle form submission
+            const editRequestForm = document.getElementById('editRequestForm');
+            if (editRequestForm) {
+                editRequestForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = {
+                        requestId: this.querySelector('#requestId').value,
+                        purpose: this.querySelector('select[name="purpose"]').value,
+                        department: this.querySelector('select[name="department"]').value,
+                        destination: this.querySelector('input[name="destination"]').value,
+                        passengers: this.querySelector('input[name="passengers"]').value,
+                        startDateTime: this.querySelector('input[name="startDateTime"]').value,
+                        endDateTime: this.querySelector('input[name="endDateTime"]').value,
+                        vehicleType: this.querySelector('select[name="vehicleType"]').value,
+                        specialRequirements: this.querySelector('input[name="specialRequirements"]').value,
+                        additionalNotes: this.querySelector('textarea[name="additionalNotes"]').value
+                    };
+
+                    // Here you would typically send the data to your backend
+                    // For now, we'll just show a success message and redirect
+                    alert('Request updated successfully!');
+                    window.location.href = `view-request.html?id=${requestId}`;
+                });
+            }
+
+            // Handle date/time validation
+            const startDateTimeInput = document.querySelector('input[name="startDateTime"]');
+            const endDateTimeInput = document.querySelector('input[name="endDateTime"]');
+
+            if (startDateTimeInput && endDateTimeInput) {
+                startDateTimeInput.addEventListener('change', function() {
+                    endDateTimeInput.min = this.value;
+                    if (endDateTimeInput.value && endDateTimeInput.value < this.value) {
+                        endDateTimeInput.value = this.value;
+                    }
+                });
+
+                endDateTimeInput.addEventListener('change', function() {
+                    if (this.value < startDateTimeInput.value) {
+                        alert('End date/time must be after start date/time');
+                        this.value = startDateTimeInput.value;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

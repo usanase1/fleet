@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Driver Dashboard - UR Fleet Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="driver-dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="logo" />
+        <h2>Driver Portal</h2>
+      </div>
+      <ul class="nav-links">
+        <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#availability"><i class="fas fa-calendar-check"></i> Confirm Availability</a></li>
+        <li><a href="#confirmed"><i class="fas fa-clipboard-check"></i> Confirmed Request</a></li>
+        <li><a href="#fuel"><i class="fas fa-gas-pump"></i> Fuel and Vehicle Reporting</a></li>
+        <li><a href="#issues"><i class="fas fa-exclamation-triangle"></i> Vehicle Issue Reporting</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#profile"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="user-info">
+          <span class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">2</span>
+          </span>
+          <div class="user-profile">
+            <img src="./image/avatar.png" alt="Driver Profile" />
+            <span>Driver Name</span>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="user-info-header">
+                <img src="./image/avatar.png" alt="Driver Profile" />
+                <div class="user-details">
+                  <h4>Driver Name</h4>
+                  <p>ID: DRV-001</p>
+                </div>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <a href="#profile" class="user-dropdown-item"><i class="fas fa-id-card"></i> Driver Information</a>
+              <a href="#license" class="user-dropdown-item"><i class="fas fa-drivers-license"></i> License Details</a>
+              <a href="#settings" class="user-dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="login.html" class="user-dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <!-- Quick Access Cards -->
+        <section class="stats-grid" id="dashboard">
+          <a href="confirm-availability.html" class="stat-card">
+            <i class="fas fa-calendar-check"></i>
+            <div class="stat-info">
+              <h3>Confirm Availability</h3>
+            </div>
+          </a>
+          <a href="confirmed-requests.html" class="stat-card">
+            <i class="fas fa-clipboard-check"></i>
+            <div class="stat-info">
+              <h3>Confirmed Request</h3>
+            </div>
+          </a>
+          <a href="fuel-reporting.html" class="stat-card">
+            <i class="fas fa-gas-pump"></i>
+            <div class="stat-info">
+              <h3>Fuel and Vehicle Reporting</h3>
+            </div>
+          </a>
+          <a href="vehicle-issues.html" class="stat-card">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="stat-info">
+              <h3>Vehicle Issue Reporting</h3>
+            </div>
+          </a>
+        </section>
+
+        <!-- Graphs Section -->
+        <section class="graphs-container">
+          <div class="graph-card">
+            <div class="graph-header">
+              <h3 class="graph-title">Monthly Trip Statistics</h3>
+              <div class="graph-actions">
+                <button class="action-btn"><i class="fas fa-download"></i></button>
+                <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            <div class="graph-content">
+              <!-- Graph will be rendered here -->
+              <canvas id="tripStatsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <h3 class="graph-title">Vehicle Performance</h3>
+              <div class="graph-actions">
+                <button class="action-btn"><i class="fas fa-download"></i></button>
+                <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+            </div>
+            <div class="graph-content">
+              <!-- Graph will be rendered here -->
+              <canvas id="vehiclePerformanceChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- STATS GRID, TRIPS, REQUESTS, FUEL, ISSUES (UNCHANGED) -->
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userRole = localStorage.getItem('userRole');
+
+      if (!isLoggedIn || userRole !== 'driver') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const username = localStorage.getItem('username');
+      document.querySelector('.user-profile span').textContent = username || 'Driver';
+      document.querySelector('.user-details h4').textContent = username || 'Driver';
+
+      const userProfile = document.querySelector('.user-profile');
+      const userDropdown = document.getElementById('userDropdown');
+
+      userProfile.addEventListener('click', function (e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', function () {
+        userDropdown.classList.remove('show');
+      });
+
+      const navLinks = document.querySelectorAll('.nav-links li');
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('username');
+        localStorage.removeItem('userRole');
+        window.location.href = 'login.html';
+      });
+
+      // Initialize Charts
+      const tripStatsCtx = document.getElementById('tripStatsChart').getContext('2d');
+      const vehiclePerformanceCtx = document.getElementById('vehiclePerformanceChart').getContext('2d');
+
+      // Monthly Trip Statistics Chart
+      new Chart(tripStatsCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Completed Trips',
+            data: [12, 19, 15, 17, 20, 18],
+            backgroundColor: 'rgba(0, 51, 102, 0.7)',
+            borderColor: 'rgba(0, 51, 102, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Vehicle Performance Chart
+      new Chart(vehiclePerformanceCtx, {
+        type: 'line',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [{
+            label: 'Fuel Efficiency (km/L)',
+            data: [12, 11.5, 12.2, 11.8],
+            backgroundColor: 'rgba(196, 30, 58, 0.2)',
+            borderColor: 'rgba(196, 30, 58, 1)',
+            borderWidth: 2,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
